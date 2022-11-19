@@ -1,0 +1,55 @@
+﻿@model List<Todo_list.dal.Entities.MyTask>
+
+<div id="listTable">
+    @await Html.PartialAsync("List")
+</div>
+@await Html.PartialAsync("AddTask")
+@section Scripts
+    {
+    <script>
+        function onBtnNewClick(btn){
+            $("#frmAddTask").show();
+        }
+        function closeFrmAddTask(){
+            $("#frmAddTask").hide();
+            $("#inpTaskName").val("");
+        }
+        function saveTask(){
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AddTask", "Home")',
+                data: { Body: $("#inpTaskName").val() },
+                dataType: 'json',
+                complete: function (result) {
+                    closeFrmAddTask();
+                    refreshList(result);
+                }
+            });
+        }
+        function onCbxCompletedChanged(cbx) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateCompleted", "Home")',
+                data: { Completed: cbx.checked, Id: Number(cbx.attributes.getNamedItem("item-id").nodeValue) },
+                dataType: 'json',
+                complete: function (result) {
+                    refreshList(result);
+                }
+            });
+        }
+        function onBtnArchiveClick(btn) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Archive", "Home")',
+                data: { id: Number(btn.attributes.getNamedItem("item-id").nodeValue), Archived: true },
+                dataType: 'json',
+                complete: function (result) {
+                    refreshList(result);
+                }
+            });
+        }
+        function refreshList(viewResult) {
+            $('#listTable').html(viewResult.responseText);
+        }
+    </script>
+}

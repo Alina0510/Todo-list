@@ -1,0 +1,39 @@
+﻿@model List<Todo_list.dal.Entities.MyTask>
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th class="col-md-1" scope="col">
+                <button type="button" class="badge btn btn-lg" onclick="onBtnNewClick(this)">New</button>
+            </th>
+            <th class="col-md-2 align-middle" scope="col">Completed</th>
+            <th class="col-md-7 align-middle" scope="col">Body</th>
+            <th class="col-md-2 align-middle" scope="col">Archive</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @if (!item.Archived)
+                {
+                    <td class="align-middle" scope="row">@item.Id.</td>
+                    <td class="align-middle"><input type="checkbox" item-id="@item.Id" onchange="onCbxCompletedChanged(this)" checked="@item.Completed" /></td>
+                    @if (item.Completed)
+                    {
+                        <td class="align-middle text-decoration-line-through">@item.Body</td>
+                    }
+                    else
+                    {
+                        <td class="align-middle">@item.Body</td>
+                    }
+                    <td class="align-middle">
+                        <button type="button" class="btn btn-outline-primary btn-sm" item-id="@item.Id" onclick="onBtnArchiveClick(this)">
+                            Archive
+                        </button>
+                    </td>
+                    
+                }
+            </tr>
+        }
+    </tbody>
+</table>
